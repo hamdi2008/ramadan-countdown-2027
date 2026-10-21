@@ -12,6 +12,7 @@
       --text: #f4f1ea;
       --muted: #a9b8cc;
       --card: rgba(255, 255, 255, 0.07);
+      --card-hover: rgba(255, 255, 255, 0.12);
       --card-border: rgba(233, 196, 106, 0.3);
     }
 
@@ -22,20 +23,46 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 24px 16px;
+      padding: 48px 16px 24px;
       font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
       color: var(--text);
       background: linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
+      background-attachment: fixed;
       text-align: center;
+    }
+
+    #sky {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    main {
+      width: 100%;
+      max-width: 760px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+      cursor: pointer;
     }
 
     .moon {
       font-size: 64px;
       line-height: 1;
       margin-bottom: 12px;
+      background: none;
+      border: none;
       filter: drop-shadow(0 0 18px rgba(233, 196, 106, 0.6));
+      transition: transform 0.3s ease;
     }
+    .moon:hover { transform: scale(1.1) rotate(-8deg); }
 
     h1 {
       font-size: clamp(28px, 6vw, 48px);
@@ -49,14 +76,38 @@
       font-size: clamp(14px, 3vw, 18px);
     }
 
+    .tabs {
+      display: inline-flex;
+      margin-top: 24px;
+      padding: 4px;
+      border: 1px solid var(--card-border);
+      border-radius: 999px;
+      background: var(--card);
+    }
+    .tab {
+      border: none;
+      background: none;
+      padding: 8px 18px;
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 15px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .tab[aria-selected="true"] {
+      background: var(--gold);
+      color: var(--bg-top);
+      font-weight: 600;
+    }
+
     .countdown {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 14px;
-      margin-top: 36px;
+      margin-top: 28px;
       width: 100%;
-      max-width: 760px;
     }
+    .countdown.total { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .countdown.total .unit-months { display: none; }
 
     .unit {
       background: var(--card);
@@ -70,6 +121,11 @@
       font-size: clamp(32px, 7vw, 56px);
       font-weight: 700;
       font-variant-numeric: tabular-nums;
+    }
+    .value.tick { animation: tick 0.35s ease; }
+    @keyframes tick {
+      0% { transform: translateY(-6px); opacity: 0.4; }
+      100% { transform: translateY(0); opacity: 1; }
     }
 
     .label {
@@ -87,6 +143,137 @@
       color: var(--gold);
     }
 
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 22px;
+    }
+    .btn {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 999px;
+      padding: 9px 16px;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: var(--card-hover); }
+
+    .panel {
+      width: 100%;
+      margin-top: 40px;
+      padding: 24px 20px;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      text-align: left;
+    }
+    .panel h2 {
+      font-size: 20px;
+      color: var(--gold);
+    }
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+    }
+    .progress-text { color: var(--muted); font-size: 14px; }
+
+    .progress {
+      height: 6px;
+      margin: 14px 0 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+    }
+    .progress span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: var(--gold);
+      transition: width 0.3s ease;
+    }
+
+    .checklist { list-style: none; }
+    .checklist li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .checklist label {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+    .checklist input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--gold);
+      flex-shrink: 0;
+    }
+    .checklist li.done span {
+      color: var(--muted);
+      text-decoration: line-through;
+    }
+    .remove {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1;
+      padding: 4px 8px;
+      opacity: 0.6;
+    }
+    .remove:hover { opacity: 1; color: var(--text); }
+
+    .add-form {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .add-form input {
+      flex: 1;
+      min-width: 0;
+      padding: 10px 14px;
+      font: inherit;
+      font-size: 15px;
+      color: var(--text);
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+    }
+    .add-form input::placeholder { color: var(--muted); }
+
+    .reflection {
+      margin-top: 16px;
+      font-size: 17px;
+      line-height: 1.5;
+      min-height: 3em;
+      transition: opacity 0.3s;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translate(-50%, 20px);
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: var(--gold);
+      color: var(--bg-top);
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s, transform 0.25s;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
     footer {
       margin-top: 40px;
       font-size: 13px;
@@ -95,68 +282,431 @@
 
     @media (max-width: 560px) {
       .countdown { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .countdown.total { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
     }
   </style>
 </head>
 <body>
-  <div class="moon">🌙</div>
-  <h1>Ramadan Countdown</h1>
-  <p class="subtitle">Ramadan is expected to begin on the evening of Sunday, February 7, 2027</p>
+  <canvas id="sky" aria-hidden="true"></canvas>
 
-  <div class="countdown" id="countdown">
-    <div class="unit"><span class="value" id="months">0</span><span class="label">Months</span></div>
-    <div class="unit"><span class="value" id="days">0</span><span class="label">Days</span></div>
-    <div class="unit"><span class="value" id="hours">00</span><span class="label">Hours</span></div>
-    <div class="unit"><span class="value" id="minutes">00</span><span class="label">Minutes</span></div>
-    <div class="unit"><span class="value" id="seconds">00</span><span class="label">Seconds</span></div>
-  </div>
+  <main>
+    <button class="moon" id="moon" title="Click me">🌙</button>
+    <h1 id="title">Ramadan Countdown</h1>
+    <p class="subtitle" id="subtitle"></p>
 
-  <p class="message" id="message" hidden>Ramadan Mubarak! 🌙</p>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" data-event="ramadan" aria-selected="true">Ramadan</button>
+      <button class="tab" role="tab" data-event="eid" aria-selected="false">Eid al-Fitr</button>
+    </div>
 
-  <footer>Counting down to 6:00 PM (your local time) on February 7, 2027. Actual start depends on moon sighting.</footer>
+    <div class="countdown" id="countdown">
+      <div class="unit unit-months"><span class="value" id="months">0</span><span class="label">Months</span></div>
+      <div class="unit"><span class="value" id="days">0</span><span class="label">Days</span></div>
+      <div class="unit"><span class="value" id="hours">00</span><span class="label">Hours</span></div>
+      <div class="unit"><span class="value" id="minutes">00</span><span class="label">Minutes</span></div>
+      <div class="unit"><span class="value" id="seconds">00</span><span class="label">Seconds</span></div>
+    </div>
+
+    <p class="message" id="message" hidden></p>
+
+    <div class="actions">
+      <button class="btn" id="toggle-view">Show total days</button>
+      <button class="btn" id="add-calendar">📅 Add to calendar</button>
+      <button class="btn" id="share">🔗 Share</button>
+    </div>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Ramadan prep checklist</h2>
+        <span class="progress-text" id="progress-text"></span>
+      </div>
+      <div class="progress"><span id="progress-bar"></span></div>
+      <ul class="checklist" id="checklist"></ul>
+      <form class="add-form" id="add-form">
+        <input id="new-item" type="text" placeholder="Add your own goal…" maxlength="80" />
+        <button class="btn" type="submit">Add</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Reflection</h2>
+        <button class="btn" id="next-reflection">Another one</button>
+      </div>
+      <p class="reflection" id="reflection"></p>
+    </section>
+
+    <footer id="footer"></footer>
+  </main>
+
+  <div class="toast" id="toast" role="status"></div>
 
   <script>
-    // Evening of Sunday, February 7, 2027 at 6:00 PM local time (month index 1 = February)
-    const target = new Date(2027, 1, 7, 18, 0, 0);
+    // ---- Events (month index 1 = February, 2 = March) ----
+    const EVENTS = {
+      ramadan: {
+        title: "Ramadan Countdown",
+        subtitle: "Ramadan is expected to begin on the evening of Sunday, February 7, 2027",
+        footer: "Counting down to 6:00 PM (your local time) on February 7, 2027. Actual start depends on moon sighting.",
+        done: "Ramadan Mubarak! 🌙",
+        calendarTitle: "Ramadan begins (expected)",
+        target: new Date(2027, 1, 7, 18, 0, 0),
+      },
+      eid: {
+        title: "Eid al-Fitr Countdown",
+        subtitle: "Eid al-Fitr is expected to begin on the evening of Tuesday, March 9, 2027",
+        footer: "Counting down to 6:00 PM (your local time) on March 9, 2027. Actual date depends on moon sighting.",
+        done: "Eid Mubarak! ✨",
+        calendarTitle: "Eid al-Fitr begins (expected)",
+        target: new Date(2027, 2, 9, 18, 0, 0),
+      },
+    };
 
+    const $ = (id) => document.getElementById(id);
     const pad = (n) => String(n).padStart(2, "0");
 
+    // Browser storage may be unavailable (private mode etc.), so every access is guarded
+    const store = {
+      get(key, fallback) {
+        try {
+          const raw = localStorage.getItem(key);
+          return raw === null ? fallback : JSON.parse(raw);
+        } catch { return fallback; }
+      },
+      set(key, value) {
+        try { localStorage.setItem(key, JSON.stringify(value)); } catch {}
+      },
+    };
+
+    let current = store.get("event", "ramadan");
+    if (!EVENTS[current]) current = "ramadan";
+    let totalView = store.get("totalView", false);
+
+    function showToast(text) {
+      const toast = $("toast");
+      toast.textContent = text;
+      toast.classList.add("show");
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
+    // ---- Countdown ----
     function addMonths(date, months) {
       const d = new Date(date);
       d.setMonth(d.getMonth() + months);
       return d;
     }
 
-    function update() {
-      const now = new Date();
+    function setValue(id, text) {
+      const el = $(id);
+      if (el.textContent === text) return;
+      el.textContent = text;
+      el.classList.remove("tick");
+      void el.offsetWidth; // restart the animation
+      el.classList.add("tick");
+    }
 
-      if (now >= target) {
-        document.getElementById("countdown").hidden = true;
-        document.getElementById("message").hidden = false;
-        clearInterval(timer);
-        return;
+    function update() {
+      const event = EVENTS[current];
+      const now = new Date();
+      const finished = now >= event.target;
+
+      $("countdown").hidden = finished;
+      $("message").hidden = !finished;
+      $("toggle-view").hidden = finished;
+      if (finished) return;
+
+      // Count whole calendar months first (unless showing total days), then split the remainder
+      let months = 0;
+      if (!totalView) {
+        while (addMonths(now, months + 1) <= event.target) months++;
       }
 
-      // Count whole calendar months first, then break the remainder into days/hours/minutes/seconds
-      let months = 0;
-      while (addMonths(now, months + 1) <= target) months++;
-
-      const remaining = target - addMonths(now, months);
+      const remaining = event.target - addMonths(now, months);
       const totalSeconds = Math.floor(remaining / 1000);
       const days = Math.floor(totalSeconds / 86400);
       const hours = Math.floor((totalSeconds % 86400) / 3600);
       const minutes = Math.floor((totalSeconds % 3600) / 60);
       const seconds = totalSeconds % 60;
 
-      document.getElementById("months").textContent = months;
-      document.getElementById("days").textContent = days;
-      document.getElementById("hours").textContent = pad(hours);
-      document.getElementById("minutes").textContent = pad(minutes);
-      document.getElementById("seconds").textContent = pad(seconds);
+      setValue("months", String(months));
+      setValue("days", String(days));
+      setValue("hours", pad(hours));
+      setValue("minutes", pad(minutes));
+      setValue("seconds", pad(seconds));
     }
 
-    const timer = setInterval(update, 1000);
-    update();
+    function render() {
+      const event = EVENTS[current];
+      $("title").textContent = event.title;
+      $("subtitle").textContent = event.subtitle;
+      $("footer").textContent = event.footer;
+      $("message").textContent = event.done;
+      document.title = event.title;
+      document.querySelectorAll(".tab").forEach((tab) => {
+        tab.setAttribute("aria-selected", String(tab.dataset.event === current));
+      });
+      $("countdown").classList.toggle("total", totalView);
+      $("toggle-view").textContent = totalView ? "Show months" : "Show total days";
+      update();
+    }
+
+    document.querySelectorAll(".tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        current = tab.dataset.event;
+        store.set("event", current);
+        render();
+      });
+    });
+
+    $("toggle-view").addEventListener("click", () => {
+      totalView = !totalView;
+      store.set("totalView", totalView);
+      render();
+    });
+
+    // ---- Add to calendar (.ics download) ----
+    $("add-calendar").addEventListener("click", () => {
+      const event = EVENTS[current];
+      const t = event.target;
+      const stamp = (d) =>
+        `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
+      const end = new Date(t.getTime() + 60 * 60 * 1000);
+      const now = new Date();
+      const utcStamp = now.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+      const ics = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//Ramadan Countdown//EN",
+        "BEGIN:VEVENT",
+        `UID:${current}-${t.getFullYear()}@ramadan-countdown`,
+        `DTSTAMP:${utcStamp}`,
+        `DTSTART:${stamp(t)}`,
+        `DTEND:${stamp(end)}`,
+        `SUMMARY:${event.calendarTitle}`,
+        "DESCRIPTION:Actual date depends on moon sighting.",
+        "BEGIN:VALARM",
+        "TRIGGER:-P1D",
+        "ACTION:DISPLAY",
+        `DESCRIPTION:${event.calendarTitle} tomorrow`,
+        "END:VALARM",
+        "END:VEVENT",
+        "END:VCALENDAR",
+      ].join("\r\n");
+
+      const url = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${current}-2027.ics`;
+      link.click();
+      URL.revokeObjectURL(url);
+      showToast("Calendar event downloaded");
+    });
+
+    // ---- Share ----
+    $("share").addEventListener("click", async () => {
+      const event = EVENTS[current];
+      const days = Math.max(0, Math.ceil((event.target - new Date()) / 86400000));
+      const text = `${days} days until ${current === "eid" ? "Eid al-Fitr" : "Ramadan"}! 🌙`;
+      const shareData = { title: event.title, text, url: location.href };
+
+      if (navigator.share) {
+        try { await navigator.share(shareData); } catch {}
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(`${text} ${location.href}`);
+        showToast("Copied to clipboard");
+      } catch {
+        showToast(text);
+      }
+    });
+
+    // ---- Moon phases ----
+    const PHASES = ["🌙", "🌑", "🌒", "🌓", "🌔", "🌕", "🌖", "🌗", "🌘"];
+    let phase = 0;
+    $("moon").addEventListener("click", () => {
+      phase = (phase + 1) % PHASES.length;
+      $("moon").textContent = PHASES[phase];
+      for (let i = 0; i < 3; i++) setTimeout(launchShootingStar, i * 150);
+    });
+
+    // ---- Checklist ----
+    const DEFAULT_ITEMS = [
+      "Make up any missed fasts",
+      "Set a Quran reading goal",
+      "Plan healthy suhoor meals",
+      "Choose a charity (sadaqah) goal",
+      "Plan iftar gatherings with family & friends",
+    ].map((text, i) => ({ id: `d${i}`, text, done: false }));
+
+    let items = store.get("checklist", DEFAULT_ITEMS);
+
+    function renderChecklist() {
+      const list = $("checklist");
+      list.innerHTML = "";
+      items.forEach((item) => {
+        const li = document.createElement("li");
+        li.classList.toggle("done", item.done);
+
+        const label = document.createElement("label");
+        const box = document.createElement("input");
+        box.type = "checkbox";
+        box.checked = item.done;
+        box.addEventListener("change", () => {
+          item.done = box.checked;
+          saveChecklist();
+          if (items.length && items.every((i) => i.done)) showToast("All set for Ramadan! 🎉");
+        });
+        const span = document.createElement("span");
+        span.textContent = item.text;
+        label.append(box, span);
+
+        const remove = document.createElement("button");
+        remove.className = "remove";
+        remove.type = "button";
+        remove.textContent = "×";
+        remove.setAttribute("aria-label", `Remove "${item.text}"`);
+        remove.addEventListener("click", () => {
+          items = items.filter((i) => i !== item);
+          saveChecklist();
+        });
+
+        li.append(label, remove);
+        list.append(li);
+      });
+
+      const done = items.filter((i) => i.done).length;
+      $("progress-text").textContent = items.length ? `${done} of ${items.length} done` : "";
+      $("progress-bar").style.width = items.length ? `${(done / items.length) * 100}%` : "0";
+    }
+
+    function saveChecklist() {
+      store.set("checklist", items);
+      renderChecklist();
+    }
+
+    $("add-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const input = $("new-item");
+      const text = input.value.trim();
+      if (!text) return;
+      items.push({ id: String(Date.now()), text, done: false });
+      input.value = "";
+      saveChecklist();
+    });
+
+    // ---- Reflections ----
+    const REFLECTIONS = [
+      "Ramadan is a chance to build habits that last all year — start small now.",
+      "Who could you invite to share an iftar with this year?",
+      "Pick one surah you'd like to understand more deeply this Ramadan.",
+      "Small, consistent good deeds are beloved — what's one you can begin today?",
+      "Think of someone you've lost touch with. Ramadan is a good time to reconnect.",
+      "Gratitude grows when we notice it. Name three blessings from today.",
+      "Plan your charity early so it reaches people when they need it most.",
+    ];
+    let reflectionIndex = Math.floor(Math.random() * REFLECTIONS.length);
+
+    function showReflection() {
+      const el = $("reflection");
+      el.style.opacity = 0;
+      setTimeout(() => {
+        el.textContent = REFLECTIONS[reflectionIndex];
+        el.style.opacity = 1;
+      }, 200);
+    }
+    $("next-reflection").addEventListener("click", () => {
+      reflectionIndex = (reflectionIndex + 1) % REFLECTIONS.length;
+      showReflection();
+    });
+
+    // ---- Starry sky (click the background for a shooting star) ----
+    const canvas = $("sky");
+    const ctx = canvas.getContext("2d");
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let stars = [];
+    let shootingStars = [];
+
+    function resizeSky() {
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = innerWidth * dpr;
+      canvas.height = innerHeight * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const count = Math.round((innerWidth * innerHeight) / 6000);
+      stars = Array.from({ length: count }, () => ({
+        x: Math.random() * innerWidth,
+        y: Math.random() * innerHeight,
+        r: Math.random() * 1.3 + 0.3,
+        phase: Math.random() * Math.PI * 2,
+        speed: Math.random() * 0.02 + 0.005,
+      }));
+    }
+
+    function launchShootingStar(x, y) {
+      if (reduceMotion) return;
+      shootingStars.push({
+        x: x ?? Math.random() * innerWidth * 0.7,
+        y: y ?? Math.random() * innerHeight * 0.4,
+        vx: 7 + Math.random() * 3,
+        vy: 3 + Math.random() * 2,
+        life: 1,
+      });
+    }
+
+    function drawSky() {
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      for (const s of stars) {
+        s.phase += s.speed;
+        ctx.globalAlpha = 0.35 + 0.65 * Math.abs(Math.sin(s.phase));
+        ctx.fillStyle = "#f4f1ea";
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      shootingStars = shootingStars.filter((s) => s.life > 0);
+      for (const s of shootingStars) {
+        const grad = ctx.createLinearGradient(s.x, s.y, s.x - s.vx * 12, s.y - s.vy * 12);
+        grad.addColorStop(0, `rgba(233, 196, 106, ${s.life})`);
+        grad.addColorStop(1, "rgba(233, 196, 106, 0)");
+        ctx.globalAlpha = 1;
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(s.x, s.y);
+        ctx.lineTo(s.x - s.vx * 12, s.y - s.vy * 12);
+        ctx.stroke();
+        s.x += s.vx;
+        s.y += s.vy;
+        s.life -= 0.015;
+      }
+      ctx.globalAlpha = 1;
+      if (!reduceMotion) requestAnimationFrame(drawSky);
+    }
+
+    document.addEventListener("click", (e) => {
+      if (e.target === document.body || e.target === canvas || e.target.tagName === "MAIN") {
+        launchShootingStar(e.clientX, e.clientY);
+      }
+    });
+    window.addEventListener("resize", () => {
+      resizeSky();
+      if (reduceMotion) drawSky();
+    });
+
+    // ---- Start ----
+    resizeSky();
+    drawSky();
+    setInterval(() => { if (Math.random() < 0.15) launchShootingStar(); }, 2000);
+    render();
+    renderChecklist();
+    showReflection();
+    setInterval(update, 1000);
   </script>
 </body>
 </html>
